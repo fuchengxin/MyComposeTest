@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">MyComposeTest</string>
+
+    <string name="string_home">Home</string>
+    <string name="string_qa">问答</string>
+    <string name="string_navigation">导航</string>
+    <string name="string_mine">我的</string>
+</resources>

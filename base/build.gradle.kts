@@ -1,0 +1,73 @@
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.google.ksp)
+}
+
+android {
+    namespace = "com.chuyou.base"
+    compileSdk = libs.versions.compileSdk.get().toInt()
+
+    defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles("consumer-rules.pro")
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    sourceSets {
+        getByName("main") {
+            // 设置 jniLibs 目录
+            jniLibs.setSrcDirs(listOf("libs"))
+
+            // 设置资源目录
+            res.setSrcDirs(
+                listOf(
+                    "src/main/res",
+                    "src/main/res-sw",
+                )
+            )
+        }
+    }
+    ksp {
+        arg("rxhttp_package", "rxhttp") // 这里的参数可以根据文档自定义
+    }
+}
+
+dependencies {
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+
+    api(libs.androidx.core.ktx)
+    api(libs.androidx.lifecycle.runtime.ktx)
+    api(libs.androidx.appcompat)
+    api(libs.material)
+
+    api(platform(libs.androidx.compose.bom))
+    debugApi(libs.androidx.compose.ui.tooling)
+    debugApi(libs.androidx.compose.ui.test.manifest)
+
+    api(libs.androidx.compose.material.icons.extended)
+    api(libs.bundles.compose)
+    api(libs.androidx.navigation.compose)
+    api(libs.androidx.browser)
+    api(libs.coil.compose)
+
+    api(libs.okhttp)
+    api(libs.rxhttp)
+
+    // 注意：ksp 依赖也使用 alias
+    ksp(libs.rxhttp.compiler)
+
+}
