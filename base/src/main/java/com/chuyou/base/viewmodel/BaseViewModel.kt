@@ -9,14 +9,17 @@ import com.chuyou.base.effect.CommonEffect
 import com.chuyou.base.state.PageState
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-abstract class BaseViewModel<S, E> : ViewModel() {
+abstract class BaseViewModel<S> : ViewModel() {
     //是否显示页面loading
     var pageState by mutableStateOf<PageState>(PageState.Content)
         protected set
@@ -30,7 +33,8 @@ abstract class BaseViewModel<S, E> : ViewModel() {
         protected set
 
     //UI 状态：使用 StateFlow 驱动 UI
-    abstract val uiState: StateFlow<S>
+    private val _uiState = MutableStateFlow( createInitialState())
+    val uiState: StateFlow<S> =  _uiState.asStateFlow()
 
     // 单次副作用：如弹窗、跳转、Toast（使用 Channel 防止丢失）
     private val _effect = Channel<CommonEffect>(Channel.BUFFERED)
@@ -38,7 +42,10 @@ abstract class BaseViewModel<S, E> : ViewModel() {
     protected fun sendEffect(effect: CommonEffect) {
         viewModelScope.launch { _effect.send(effect) }
     }
-
+    protected fun updateState(action: (S) -> S) {
+        _uiState.update(action)
+    }
+    abstract fun createInitialState(): S
     /**
      * 核心请求封装
      * @param block 请求体，返回 IAwait<T>

@@ -16,7 +16,8 @@ dependencyResolutionManagement {
         maven { setUrl("https://maven.google.com") }
         mavenCentral()
         maven { setUrl("https://jitpack.io") }
-//        maven { url = uri("https://maven.aliyun.com/repository/public/") }
+        google()
+        //        maven { url = uri("https://maven.aliyun.com/repository/public/") }
 //        maven { url = uri("https://repo1.maven.org/maven2/") }
     }
 }

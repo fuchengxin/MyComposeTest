@@ -1,11 +1,17 @@
 package com.chuyou.base.route
 
 import androidx.navigation.NavHostController
+import java.lang.ref.WeakReference
 
 object MyNavigator {
-    private var navController: NavHostController? = null
+    private var navControllerRef: WeakReference<NavHostController>? = null
+    private val navController: NavHostController?
+        get() = navControllerRef?.get()
+
     fun setController(controller: NavHostController?) {
-        navController = controller
+        navControllerRef = controller?.let {
+            WeakReference(it)
+        }
     }
 
     fun navigateToWeb(url: String, title: String) {

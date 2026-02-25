@@ -5,12 +5,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsTopHeight
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,9 +19,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import com.chuyou.base.state.PageState
 import com.chuyou.base.util.findActivity
 
@@ -75,16 +71,11 @@ fun BasePage(
                 }
 
                 is PageState.Empty -> {
-                    Text("暂无数据", color = Color.Gray)
+                    DefaultEmptyView()
                 }
 
                 is PageState.Error -> {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                        Text("出错了: ${state.msg}", color = Color.Red)
-                        Button(onClick = onRetryClick, modifier = Modifier.padding(top = 8.dp)) {
-                            Text("点击重试")
-                        }
-                    }
+                    DefaultErrorView(msg = state.msg, onRetryClick = onRetryClick)
                 }
 
                 is PageState.Content -> {

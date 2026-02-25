@@ -63,6 +63,9 @@ dependencies {
     api(libs.androidx.navigation.compose)
     api(libs.androidx.browser)
     api(libs.coil.compose)
+    api(libs.androidx.paging.compose)
+    api(libs.androidx.paging.runtime)
+    api(libs.paging.common)
 
     api(libs.okhttp)
     api(libs.rxhttp)

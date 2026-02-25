@@ -4,10 +4,10 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -43,8 +43,8 @@ fun MainScreen() {
         }
     }
     val items = listOf(RoutePath.Home.route, RoutePath.Search.route, RoutePath.Msg.route, RoutePath.Mine.route)
-    val labels = listOf("首页", "发现", "消息", "我的")
-    val icons = listOf(Icons.Filled.Home, Icons.Filled.Search, Icons.Filled.Email, Icons.Filled.Person)
+    val labels = listOf("首页", "问答", "消息", "我的")
+    val icons = listOf(Icons.Outlined.Home, Icons.Outlined.QuestionAnswer, Icons.Outlined.Email, Icons.Outlined.Person)
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {

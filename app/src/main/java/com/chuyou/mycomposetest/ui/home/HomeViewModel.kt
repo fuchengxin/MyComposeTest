@@ -16,20 +16,18 @@ import com.chuyou.base.viewmodel.BaseViewModel
 import com.chuyou.mycomposetest.bean.ArticleItem
 import com.chuyou.mycomposetest.bean.BannerItem
 import com.chuyou.mycomposetest.bean.BasePageData
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
 
-class HomeViewModel : BaseViewModel<HomeUiState, CommonEffect>() {
-    private val _uiState = MutableStateFlow(HomeUiState())
-    override val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
+class HomeViewModel : BaseViewModel<HomeUiState>() {
     private var currentPage = 0
     var isEnd by mutableStateOf(false)
         private set
 
     init {
         loadData()
+    }
+
+    override fun createInitialState(): HomeUiState {
+        return HomeUiState()
     }
 
     fun loadData() {
@@ -42,7 +40,7 @@ class HomeViewModel : BaseViewModel<HomeUiState, CommonEffect>() {
             block = { getRequest<List<BannerItem>>(GET_BANNER) },
             isShowLoading = true,
             onSuccess = { list ->
-                _uiState.update { it.copy(bannerItemList = list, content = "你好老板") }
+                updateState { it.copy(bannerItemList = list) }
             }
         )
     }
@@ -60,7 +58,7 @@ class HomeViewModel : BaseViewModel<HomeUiState, CommonEffect>() {
                 onSuccess = { data ->
                     val newList = data.datas
                     isEnd = data.over
-                    _uiState.update {
+                    updateState {
                         it.copy(
                             articleList = if (isRefresh) newList else it.articleList + newList
                         )
@@ -83,7 +81,7 @@ class HomeViewModel : BaseViewModel<HomeUiState, CommonEffect>() {
         requestFlow.request(
             isShowLoading = true,
             onSuccess = {
-                _uiState.update { state ->
+                updateState { state ->
                     val newList = state.articleList.toMutableList() // 转成可变列表
                     val index = newList.indexOfFirst { it.id == article.id }
                     if (index != -1) {
@@ -121,4 +119,5 @@ class HomeViewModel : BaseViewModel<HomeUiState, CommonEffect>() {
                 },
             )
     }
+
 }
