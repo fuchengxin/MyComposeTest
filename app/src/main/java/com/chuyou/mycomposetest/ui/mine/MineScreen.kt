@@ -1,14 +1,57 @@
 package com.chuyou.mycomposetest.ui.mine
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import com.chuyou.base.route.MyNavigator
+import com.chuyou.base.route.RoutePath
+import com.chuyou.base.util.MMKVUtil
 
 
 @Composable
 fun MineScreen() {
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) { Text("这是个人中心") }
+    var isLoggedIn by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        isLoggedIn = MMKVUtil.isLoggedIn()
+    }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(if (isLoggedIn) "已登录" else "未登录")
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = {
+                    MyNavigator.navigate(RoutePath.Login)
+                },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("去登录 / 注册")
+            }
+        }
+    }
 }

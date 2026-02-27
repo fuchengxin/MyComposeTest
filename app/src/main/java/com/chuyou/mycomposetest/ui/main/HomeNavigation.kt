@@ -6,6 +6,7 @@ import com.chuyou.base.route.RoutePath
 import com.chuyou.mycomposetest.ui.home.HomeScreen
 import com.chuyou.mycomposetest.ui.message.MessageScreen
 import com.chuyou.mycomposetest.ui.mine.MineScreen
+import com.chuyou.mycomposetest.ui.mine.LoginScreen
 import com.chuyou.mycomposetest.ui.search.QuestionScreen
 
 fun NavGraphBuilder.homeGraph(
@@ -14,4 +15,5 @@ fun NavGraphBuilder.homeGraph(
     composable(RoutePath.Search.route) { QuestionScreen() }
     composable(RoutePath.Msg.route) { MessageScreen() }
     composable(RoutePath.Mine.route) { MineScreen() }
+    composable(RoutePath.Login.route) { LoginScreen() }
 }

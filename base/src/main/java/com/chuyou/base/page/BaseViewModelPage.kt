@@ -1,17 +1,15 @@
 package com.chuyou.base.page
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import com.chuyou.base.effect.CommonEffect
 import com.chuyou.base.effect.ObserveEffect
 import com.chuyou.base.viewmodel.BaseViewModel
 import com.chuyou.base.widget.LoadingUI
-import kotlinx.coroutines.launch
 
 @Composable
 fun <S> BaseViewModelPage(
@@ -23,16 +21,11 @@ fun <S> BaseViewModelPage(
     onRetry: () -> Unit = {},
     content: @Composable () -> Unit
 ) {
-    val snackBarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
     ObserveEffect(viewModel.effect) { effect ->
         when (effect) {
             is CommonEffect.ShowToast -> {
-                scope.launch {
-                    snackBarHostState.showSnackbar(
-                        message = effect.msg,
-                    )
-                }
+                Toast.makeText(context, effect.msg, Toast.LENGTH_SHORT).show()
             }
         }
     }

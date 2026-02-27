@@ -3,6 +3,7 @@ package com.chuyou.mycomposetest
 import android.app.Application
 import android.content.Context
 import com.chuyou.base.http.NetworkConfig
+import com.tencent.mmkv.MMKV
 
 class MyApplication : Application() {
     companion object {
@@ -17,5 +18,6 @@ class MyApplication : Application() {
         super.onCreate()
         instance = this
         NetworkConfig.init(this)
+        MMKV.initialize(this)
     }
 }

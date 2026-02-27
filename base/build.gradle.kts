@@ -69,6 +69,7 @@ dependencies {
 
     api(libs.okhttp)
     api(libs.rxhttp)
+    api(libs.mmkv)
 
     // 注意：ksp 依赖也使用 alias
     ksp(libs.rxhttp.compiler)

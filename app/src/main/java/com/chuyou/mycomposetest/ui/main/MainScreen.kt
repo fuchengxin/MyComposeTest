@@ -48,42 +48,44 @@ fun MainScreen() {
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
-            NavigationBar {
-                // 获取当前页面的路由，用于高亮显示按钮
-                val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentRoute = navBackStackEntry?.destination?.route
-                items.forEachIndexed { index, route ->
-                    NavigationBarItem(
-                        icon = { Icon(icons[index], contentDescription = labels[index]) },
-                        label = {
-                            Text(
-                                labels[index],
-                                fontSize = R.dimen.isp_14.resToSp(),
-                                fontWeight = if (currentRoute == route) FontWeight.Bold else FontWeight.Normal
-                            )
-                        },
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedTextColor = Color.Red,
-                            unselectedIconColor = Color.Gray,
-                            selectedIconColor = Color.White,
-                            indicatorColor = Color.Blue.copy(alpha = 0.1f)
-                        ),
-                        selected = currentRoute == route,
-                        onClick = {
-                            if (currentRoute != route) {
-                                navController.navigate(route) {
-                                    // 避免返回栈堆积：回到首页，并弹出所有中间页面
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
+            // 只在底部四个主 Tab 页面显示导航栏，其它页面（登录、Web 等）全屏显示
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            val currentRoute = navBackStackEntry?.destination?.route
+            if (currentRoute in items) {
+                NavigationBar {
+                    items.forEachIndexed { index, route ->
+                        NavigationBarItem(
+                            icon = { Icon(icons[index], contentDescription = labels[index]) },
+                            label = {
+                                Text(
+                                    labels[index],
+                                    fontSize = R.dimen.isp_14.resToSp(),
+                                    fontWeight = if (currentRoute == route) FontWeight.Bold else FontWeight.Normal
+                                )
+                            },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedTextColor = Color.Red,
+                                unselectedIconColor = Color.Gray,
+                                selectedIconColor = Color.White,
+                                indicatorColor = Color.Blue.copy(alpha = 0.1f)
+                            ),
+                            selected = currentRoute == route,
+                            onClick = {
+                                if (currentRoute != route) {
+                                    navController.navigate(route) {
+                                        // 避免返回栈堆积：回到首页，并弹出所有中间页面
+                                        popUpTo(navController.graph.findStartDestination().id) {
+                                            saveState = true
+                                        }
+                                        // 避免重复点击同一个按钮创建多个实例
+                                        launchSingleTop = true
+                                        // 切换页面时保存状态（比如列表滑动的位置）
+                                        restoreState = true
                                     }
-                                    // 避免重复点击同一个按钮创建多个实例
-                                    launchSingleTop = true
-                                    // 切换页面时保存状态（比如列表滑动的位置）
-                                    restoreState = true
                                 }
                             }
-                        }
-                    )
+                        )
+                    }
                 }
             }
         }

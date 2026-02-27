@@ -259,7 +259,7 @@ fun BannerComponent(
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable {
-//                        onBannerClick(banner)
+                        onBannerClick(banner)
                         Log.d("Banner", "点击了: ${banner.url}")
                         launchCustomChrome(context, banner.url)
                     },

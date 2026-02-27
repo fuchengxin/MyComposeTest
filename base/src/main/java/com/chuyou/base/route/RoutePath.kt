@@ -8,6 +8,7 @@ sealed class RoutePath(val route: String){
     object Search : RoutePath("search")
     object Msg : RoutePath("msg")
     object Mine : RoutePath("mine")
+    object Login : RoutePath("login")
 
     // 带参数的路由
     object Web : RoutePath("web?url={url}&title={title}") {

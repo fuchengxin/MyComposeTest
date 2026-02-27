@@ -14,6 +14,10 @@ object MyNavigator {
         }
     }
 
+    fun navigate(route: RoutePath) {
+        navController?.navigate(route.route)
+    }
+
     fun navigateToWeb(url: String, title: String) {
         // 关键：对 URL 进行转义，否则 URL 中的 / 或 ? 会破坏路由解析
         val route = RoutePath.Web.createRoute(url, title)
