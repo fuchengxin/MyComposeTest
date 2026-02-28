@@ -15,5 +15,4 @@ fun NavGraphBuilder.homeGraph(
     composable(RoutePath.Search.route) { QuestionScreen() }
     composable(RoutePath.Msg.route) { MessageScreen() }
     composable(RoutePath.Mine.route) { MineScreen() }
-    composable(RoutePath.Login.route) { LoginScreen() }
 }

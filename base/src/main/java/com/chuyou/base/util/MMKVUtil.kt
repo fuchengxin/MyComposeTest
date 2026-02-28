@@ -47,7 +47,14 @@ object MMKVUtil {
      * 删除键值对
      */
     fun remove(key: String) {
-        mmkv.remove(key)
+        mmkv.removeValueForKey(key)
+    }
+
+    /**
+     * 批量删除键值对
+     */
+    fun remove(vararg keys: String) {
+        mmkv.removeValuesForKeys(keys)
     }
 
     /**
@@ -85,8 +92,7 @@ object MMKVUtil {
      * 清除登录状态
      */
     fun clearLoginState() {
-        remove(KEY_IS_LOGGED_IN)
-        remove(KEY_USERNAME)
+        remove(KEY_IS_LOGGED_IN, KEY_USERNAME)
     }
 
     // 主题模式相关

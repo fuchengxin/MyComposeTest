@@ -12,6 +12,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kotlin.math.min
 
+/**
+ * dp,px,sp相互转换
+ */
+
 @Composable
 fun dimenAsDp(resId: Int): Dp {
    return dimensionResource(resId)

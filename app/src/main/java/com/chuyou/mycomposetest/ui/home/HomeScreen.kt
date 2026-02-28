@@ -51,6 +51,7 @@ import coil.compose.AsyncImage
 import com.chuyou.base.page.BaseViewModelPage
 import com.chuyou.base.route.MyNavigator
 import com.chuyou.base.util.launchCustomChrome
+import com.chuyou.base.util.launchExternalBrowser
 import com.chuyou.mycomposetest.bean.ArticleItem
 import com.chuyou.mycomposetest.bean.BannerItem
 import kotlinx.coroutines.delay
@@ -144,7 +145,7 @@ fun ArticleItemView(
             .fillMaxWidth()
             .padding(start = 12.dp, top = 6.dp, end = 12.dp, bottom = 12.dp)
             .clickable {
-//                onArticleItemClick(articleItem)
+                onArticleItemClick(articleItem)
                 MyNavigator.navigateToWeb(url = articleItem.link, title = articleItem.title)
             }
     ) {
@@ -261,7 +262,8 @@ fun BannerComponent(
                     .clickable {
                         onBannerClick(banner)
                         Log.d("Banner", "点击了: ${banner.url}")
-                        launchCustomChrome(context, banner.url)
+//                        launchCustomChrome(context, banner.url)
+                        launchExternalBrowser(context, banner.url)
                     },
                 contentScale = ContentScale.Crop
             )
@@ -281,9 +283,9 @@ fun BannerIndicator(count: Int, currentIndex: Int, modifier: Modifier = Modifier
     Row(modifier = modifier) {
         repeat(count) { iteration ->
             val color = if (currentIndex == iteration)
-                androidx.compose.ui.graphics.Color.Red
+                Color.Red
             else
-                androidx.compose.ui.graphics.Color.Red.copy(alpha = 0.5f)
+                Color.Red.copy(alpha = 0.5f)
 
             Box(
                 modifier = Modifier

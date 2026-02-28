@@ -1,4 +1,4 @@
-package com.chuyou.base.state
+package com.chuyou.base.page
 
 sealed class PageState {
     data object Loading : PageState()         // 加载中

@@ -20,7 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import com.chuyou.base.state.PageState
+import com.chuyou.base.route.MyNavigator
 import com.chuyou.base.util.findActivity
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -31,13 +31,14 @@ fun BasePage(
     showBackButton: Boolean = true,
     onBackClick: (() -> Unit)? = null,
     onRetryClick: () -> Unit = {}, // 错误时的重试回调
-    isStatusBarImmersive: Boolean = false,
+    isStatusBarImmersive: Boolean = false, //是否是保留状态栏高度
     customTitle: @Composable (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {
     val context = LocalContext.current
     val defaultBackAction = {
-        context.findActivity()?.finish()
+//        context.findActivity()?.finish()
+        MyNavigator.back()
     }
     Column(modifier = Modifier.fillMaxSize()) {
         if (title.isNotEmpty() || customTitle != null) {
@@ -62,7 +63,7 @@ fun BasePage(
             }
         }
         Box(
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.weight(1f).fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             when (state) {

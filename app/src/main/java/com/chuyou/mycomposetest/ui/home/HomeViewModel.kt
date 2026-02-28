@@ -38,7 +38,7 @@ class HomeViewModel : BaseViewModel<HomeUiState>() {
     private fun loadBanner() {
         launchRequestWithLoading(
             block = { getRequest<List<BannerItem>>(GET_BANNER) },
-            isShowLoading = true,
+            isShowLoadingState = true,
             onSuccess = { list ->
                 updateState { it.copy(bannerItemList = list) }
             }

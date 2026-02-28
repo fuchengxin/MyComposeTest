@@ -1,7 +1,5 @@
 package com.chuyou.mycomposetest.ui.mine
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,27 +17,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.clickable
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chuyou.base.page.BaseViewModelPage
 import com.chuyou.base.route.MyNavigator
-import com.chuyou.base.route.RoutePath
 
 /**
- * 登录页面
+ * 注册页面
  */
 @Composable
-fun LoginScreen(
+fun RegisterScreen(
     viewModel: AuthViewModel = viewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     BaseViewModelPage(
         viewModel = viewModel,
-        title = "登录",
+        title = "注册",
         showBackButton = true,
         isStatusBarImmersive = true,
     ) {
@@ -60,7 +57,7 @@ fun LoginScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "登录",
+                        text = "注册",
                         style = MaterialTheme.typography.headlineMedium
                     )
                     Spacer(modifier = Modifier.height(8.dp))
@@ -69,11 +66,11 @@ fun LoginScreen(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "没有账号？点此注册",
+                            text = "已有账号？点此登录",
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.primary,
                             modifier = Modifier.clickable {
-                                MyNavigator.navigate(RoutePath.Register)
+                                MyNavigator.back()
                             }
                         )
                     }
@@ -103,21 +100,29 @@ fun LoginScreen(
                         visualTransformation = PasswordVisualTransformation()
                     )
 
+                    OutlinedTextField(
+                        value = state.repassword,
+                        onValueChange = { viewModel.updateRepassword(it) },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true,
+                        label = { Text("确认密码") },
+                        visualTransformation = PasswordVisualTransformation()
+                    )
+
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Button(
                         onClick = {
-                            viewModel.login()
+                            viewModel.register()
                         },
                         modifier = Modifier
                             .fillMaxWidth(),
                         contentPadding = PaddingValues(vertical = 12.dp)
                     ) {
-                        Text(text = "登录")
+                        Text(text = "注册")
                     }
                 }
             }
         }
     }
 }
-

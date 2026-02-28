@@ -1,5 +1,9 @@
 package com.chuyou.mycomposetest.ui.main
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -20,17 +24,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.chuyou.base.R
 import com.chuyou.base.route.MyNavigator
 import com.chuyou.base.route.RoutePath
+import com.chuyou.base.route.bottomToTopAnimatedComposable
+import com.chuyou.base.route.rightToLeftAnimatedComposable
 import com.chuyou.base.util.resToSp
+import com.chuyou.mycomposetest.ui.mine.LoginScreen
+import com.chuyou.mycomposetest.ui.mine.RegisterScreen
 import com.chuyou.mycomposetest.ui.web.WebScreen
 
 @Composable
@@ -45,13 +53,20 @@ fun MainScreen() {
     val items = listOf(RoutePath.Home.route, RoutePath.Search.route, RoutePath.Msg.route, RoutePath.Mine.route)
     val labels = listOf("首页", "问答", "消息", "我的")
     val icons = listOf(Icons.Outlined.Home, Icons.Outlined.QuestionAnswer, Icons.Outlined.Email, Icons.Outlined.Person)
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+    val shouldShowBottomBar = currentRoute in items
+
     Scaffold(
         contentWindowInsets = WindowInsets(0, 0, 0, 0),
+        containerColor = Color.Transparent,
         bottomBar = {
-            // 只在底部四个主 Tab 页面显示导航栏，其它页面（登录、Web 等）全屏显示
-            val navBackStackEntry by navController.currentBackStackEntryAsState()
-            val currentRoute = navBackStackEntry?.destination?.route
-            if (currentRoute in items) {
+            // 使用动画控制导航栏的显示/隐藏
+            AnimatedVisibility(
+                visible = shouldShowBottomBar,
+                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
+                exit = fadeOut(animationSpec = tween(durationMillis = 300))
+            ) {
                 NavigationBar {
                     items.forEachIndexed { index, route ->
                         NavigationBarItem(
@@ -90,25 +105,45 @@ fun MainScreen() {
             }
         }
     ) { innerPadding ->
+        // 计算内容区域的padding
+        val contentPadding = if (shouldShowBottomBar) {
+            innerPadding.calculateBottomPadding()
+        } else {
+            0.dp
+        }
+
         NavHost(
             navController = navController,
             startDestination = items[0],
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = innerPadding.calculateBottomPadding())
+                .padding(bottom = contentPadding)
         ) {
+
             //首页,搜索，消息，我的
             homeGraph()
-            //其他模块
-            composable(
-                RoutePath.Web.route, arguments = listOf(
+            // Web页面
+            rightToLeftAnimatedComposable(
+                route = RoutePath.Web.route,
+                arguments = listOf(
                     navArgument("url") { type = NavType.StringType },
                     navArgument("title") { type = NavType.StringType }
-                )) { backStackEntry ->
+                )
+            ) { backStackEntry ->
                 val url = backStackEntry.arguments?.getString("url") ?: ""
                 val title = backStackEntry.arguments?.getString("title") ?: "网页"
                 WebScreen(url, title)
             }
+
+            // 登录页面
+            rightToLeftAnimatedComposable(
+                route = RoutePath.Login.route
+            ) { LoginScreen() }
+            
+            // 注册页面
+            rightToLeftAnimatedComposable(
+                route = RoutePath.Register.route
+            ) { RegisterScreen() }
         }
     }
 }
