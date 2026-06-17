@@ -16,7 +16,7 @@ fun <S> BaseViewModelPage(
     viewModel: BaseViewModel<S>,
     title: String = "",
     showBackButton: Boolean = true,
-    isStatusBarImmersive: Boolean = false,
+    isStatusBarImmersive: Boolean = true,
     onBackClick: (() -> Unit)? = null,
     onRetry: () -> Unit = {},
     content: @Composable () -> Unit

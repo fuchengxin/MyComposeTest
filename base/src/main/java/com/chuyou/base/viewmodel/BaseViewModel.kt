@@ -32,9 +32,11 @@ abstract class BaseViewModel<S> : ViewModel() {
     var isLoadingData = mutableStateOf(false)
         protected set
 
+    private var loadingRequestCount = 0
+
     //UI 状态：使用 StateFlow 驱动 UI
-    private val _uiState = MutableStateFlow( createInitialState())
-    val uiState: StateFlow<S> =  _uiState.asStateFlow()
+    private val _uiState = MutableStateFlow(createInitialState())
+    val uiState: StateFlow<S> = _uiState.asStateFlow()
 
     // 单次副作用：如弹窗、跳转、Toast（使用 Channel 防止丢失）
     private val _effect = Channel<CommonEffect>(Channel.BUFFERED)
@@ -42,10 +44,13 @@ abstract class BaseViewModel<S> : ViewModel() {
     protected fun sendEffect(effect: CommonEffect) {
         viewModelScope.launch { _effect.send(effect) }
     }
+
     protected fun updateState(action: (S) -> S) {
         _uiState.update(action)
     }
+
     abstract fun createInitialState(): S
+
     /**
      * 核心请求封装
      * @param block 请求体，返回 IAwait<T>
@@ -63,21 +68,14 @@ abstract class BaseViewModel<S> : ViewModel() {
     ) {
         viewModelScope.launch {
             if (isShowLoadingState) pageState = PageState.Loading
-            if (isShowLoading) isLoading.value = true
-            isLoadingData.value = true
-            runCatching {
-                block()
-            }.onSuccess { result ->
+            onStartLoading(isShowLoading)
+            try {
+                val result = block()
                 if (isShowLoadingState) pageState = PageState.Content
-                if (result is List<*> && result.isEmpty()) {
-                    pageState = PageState.Empty
-                } else if (isShowLoadingState) {
-                    pageState = PageState.Content
-                }
                 onSuccess?.invoke(result)
-            }.onFailure { e ->
+            } catch (e: Throwable) {
                 handleError(e, isShowLoadingState, isShowLoading, onError)
-            }.also {
+            } finally {
                 onComplete()
             }
         }
@@ -100,30 +98,33 @@ abstract class BaseViewModel<S> : ViewModel() {
             this@request
                 .onStart {
                     if (isShowLoadingState) pageState = PageState.Loading
-                    if (isShowLoading) isLoading.value = true
-                    isLoadingData.value = true
-                }
-                .onCompletion {
-                    onComplete()
+                    onStartLoading(isShowLoading)
                 }
                 .catch { e ->
                     handleError(e, isShowLoadingState, isShowLoading, onError)
                 }
+                .onCompletion {
+                    onComplete()
+                }
                 .collect { data ->
                     if (isShowLoadingState) pageState = PageState.Content
-                    if (data is List<*> && data.isEmpty()) {
-                        pageState = PageState.Empty
-                    } else if (isShowLoadingState) {
-                        pageState = PageState.Content
-                    }
                     onSuccess(data)
                 }
         }
     }
 
     fun onComplete() {
-        isLoading.value = false
-        isLoadingData.value = false
+        loadingRequestCount = (loadingRequestCount - 1).coerceAtLeast(0)
+        if (loadingRequestCount == 0) {
+            isLoading.value = false
+            isLoadingData.value = false
+        }
+    }
+
+    private fun onStartLoading(isShowLoading: Boolean) {
+        loadingRequestCount++
+        if (isShowLoading) isLoading.value = true
+        isLoadingData.value = true
     }
 
     private fun handleError(
@@ -138,16 +139,12 @@ abstract class BaseViewModel<S> : ViewModel() {
             onError(e)
         } else {
             if (isShowLoadingState) {
-                pageState = PageState.Error(e.message ?: "网络异常")
+                pageState = PageState.Error(e.message ?: "网络请求超时，请稍后重试")
             }
             if (isShowLoading) {
                 sendEffect(CommonEffect.ShowToast(e.message ?: "请求失败"))
             }
         }
-    }
-
-    protected fun showEmpty() {
-        pageState = PageState.Empty
     }
 
     protected fun updatePageState(list: List<*>?) {

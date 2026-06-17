@@ -1,4 +1,4 @@
-package com.chuyou.base.http
+package com.chuyou.network.http
 
 import rxhttp.wrapper.annotation.DefaultDomain
 import rxhttp.wrapper.annotation.Domain
@@ -6,8 +6,7 @@ import rxhttp.wrapper.annotation.Domain
 @DefaultDomain
 const val baseUrl = "https://www.wanandroid.com/"
 
-@Domain(name = "xiaodian", className = "xiaodian")
-
+@Domain(name = "XiaoDian", className = "XiaoDian")
 const val D_API_URL = "https://appapi-ns1.xiaodianyouxi.com/index.php/"
 
 

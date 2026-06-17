@@ -37,7 +37,7 @@ fun WebScreen(
 ) {
     val webViewRef = remember { mutableStateOf<WebView?>(null) }
 
-    // 处理物理返回键
+    // 处理物理返回�?
     BackHandler(enabled = webViewRef.value?.canGoBack() == true) {
         webViewRef.value?.goBack()
     }
@@ -61,7 +61,7 @@ fun WebScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = {
-                        // 如果网页能回退就回退，不能回退就关闭页面
+                        // 如果网页能回退就回退，不能回退就关闭页�?
                         if (webViewRef.value?.canGoBack() == true) {
                             webViewRef.value?.goBack()
                         } else {
@@ -87,8 +87,8 @@ fun WebScreen(
                             ViewGroup.LayoutParams.MATCH_PARENT
                         )
                         @SuppressLint("SetJavaScriptEnabled")
-                        settings.javaScriptEnabled = true // 开启 JS 支持
-                        settings.domStorageEnabled = true // 开启 DOM 存储（很多网页需要）
+                        settings.javaScriptEnabled = true // 开�?JS 支持
+                        settings.domStorageEnabled = true // 开�?DOM 存储（很多网页需要）
 
                         webViewClient = object : WebViewClient() {
                             override fun onPageFinished(view: WebView?, url: String?) {
@@ -98,7 +98,7 @@ fun WebScreen(
                         }// 确保在内部打开网页，不跳浏览器
 
                         loadUrl(url)
-                        webViewRef.value = this // 将引用交给外部
+                        webViewRef.value = this // 将引用交给外�?
                     }
                 },
                 modifier = Modifier.fillMaxSize(),

@@ -25,3 +25,5 @@ dependencyResolutionManagement {
 rootProject.name = "MyComposeTest"
 include(":app")
 include(":base")
+include(":network")
+include(":logger")

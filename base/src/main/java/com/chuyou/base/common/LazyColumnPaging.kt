@@ -1,4 +1,4 @@
-package com.chuyou.base.common
+﻿package com.chuyou.base.common
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -34,11 +34,18 @@ import com.chuyou.base.page.DefaultErrorView
 fun <T : Any> LazyColumnPaging(
     modifier: Modifier = Modifier,
     pagingItems: LazyPagingItems<T>,
-    itemKey: ((T) -> Any)? = null,
+    itemKey: ((T) -> Any),
     itemSpacing: Dp = 12.dp,
     contentPadding: PaddingValues = PaddingValues(12.dp),
     emptyView: @Composable () -> Unit = { DefaultEmptyView() },
-    errorView: @Composable (Throwable) -> Unit = { DefaultErrorView(throwable = it) { pagingItems.retry() } },
+    errorView: @Composable (Throwable) -> Unit = { throwable ->
+        val errorMsg = when (throwable) {
+            is java.net.SocketTimeoutException -> "网络请求超时，请稍后重试"
+            is java.net.UnknownHostException -> "无法连接网络，请检查设置"
+            else -> throwable.message ?: "未知错误"
+        }
+        DefaultErrorView(msg = errorMsg, throwable = throwable) { pagingItems.retry() }
+    },
     itemContent: @Composable (T) -> Unit
 ) {
     val loadState = pagingItems.loadState
@@ -66,7 +73,7 @@ fun <T : Any> LazyColumnPaging(
         else -> {
             PullToRefreshBox(
                 modifier = modifier,
-                isRefreshing = loadState.refresh is LoadState.Loading,
+                isRefreshing = loadState.refresh is LoadState.Loading && pagingItems.itemCount > 0,
                 onRefresh = { pagingItems.refresh() }
             ) {
                 LazyColumn(
@@ -77,15 +84,16 @@ fun <T : Any> LazyColumnPaging(
                     // 数据列表渲染
                     items(
                         count = pagingItems.itemCount,
-                        key = if (itemKey != null) pagingItems.itemKey { itemKey(it) } else null
+                        key = pagingItems.itemKey { itemKey(it) }
                     ) { index ->
                         pagingItems[index]?.let { itemContent(it) }
                     }
-
                     //处理“底部加载更多”状态
-                    item {
-                        LoadMoreFooter(loadState = loadState.append) {
-                            pagingItems.retry()
+                    if (pagingItems.itemCount > 0) {
+                        item {
+                            LoadMoreFooter(loadState = loadState.append) {
+                                pagingItems.retry()
+                            }
                         }
                     }
                 }

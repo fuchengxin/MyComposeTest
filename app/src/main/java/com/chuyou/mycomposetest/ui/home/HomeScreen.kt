@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -50,7 +50,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.chuyou.base.page.BaseViewModelPage
 import com.chuyou.base.route.MyNavigator
-import com.chuyou.base.util.launchCustomChrome
 import com.chuyou.base.util.launchExternalBrowser
 import com.chuyou.mycomposetest.bean.ArticleItem
 import com.chuyou.mycomposetest.bean.BannerItem
@@ -80,54 +79,59 @@ fun HomeScreen(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
+    BaseViewModelPage(
+        viewModel = viewModel,
+        title = "",
+        showBackButton = true,
+        onRetry = { viewModel.loadData() }
     ) {
-        BaseViewModelPage(
-            viewModel = viewModel,
-            title = "",
-            showBackButton = true,
-            isStatusBarImmersive = true,
-            onRetry = { viewModel.loadData() }
-        ) {
-            PullToRefreshBox(
-                modifier = Modifier.fillMaxSize(),
-                isRefreshing = isRefreshing,
-                onRefresh = {
-                    viewModel.loadArticleList(isRefresh = true)
-                }) {
-                LazyColumn(
-                    state = listState,
-                    modifier = Modifier
-                        .fillMaxSize(),
-                ) {
-                    //顶部banner
-                    item {
-                        BannerComponent(
-                            bannerList = state.bannerItemList,
-                            modifier = Modifier.fillMaxWidth(),
-                        )
-                    }
-                    item {
-                        Spacer(modifier = Modifier.height(6.dp))
-                    }
-                    //文章列表
-                    items(state.articleList, key = { it.id }) { article ->
-                        ArticleItemView(
-                            articleItem = article,
-                            onCollectClick = { articleItem ->
-                                viewModel.toggleCollect(articleItem)
-                            })
-                    }
-                    //加载更多
-                    item {
-                        FootView(
-                            isLoading = viewModel.isLoadingData.value,
-                            isEnd = viewModel.isEnd,
-                            itemCount = state.articleList.size
-                        )
-                    }
+        PullToRefreshBox(
+            modifier = Modifier.fillMaxSize(),
+            isRefreshing = isRefreshing,
+            onRefresh = {
+                viewModel.loadArticleList(isRefresh = true)
+            }) {
+            LazyColumn(
+                state = listState,
+                modifier = Modifier
+                    .fillMaxSize(),
+            ) {
+                // 顶部 banner
+                item {
+                    BannerComponent(
+                        bannerList = state.bannerItemList,
+                        modifier = Modifier.fillMaxWidth(),
+                    )
+                }
+                item {
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
+                // 文章列表
+                itemsIndexed(
+                    items = state.articleList,
+                    key = { index, item ->
+                        "article_${item.title}_${item.id}_$index"
+                    }) { _, item ->
+                    ArticleItemView(
+                        articleItem = item,
+                        onCollectClick = { articleItem ->
+                            viewModel.toggleCollect(articleItem)
+                        })
+                }
+//                    items(state.articleList, key = { it.id }) { article ->
+//                        ArticleItemView(
+//                            articleItem = article,
+//                            onCollectClick = { articleItem ->
+//                                viewModel.toggleCollect(articleItem)
+//                            })
+//                    }
+                // 加载更多
+                item {
+                    FootView(
+                        isLoading = viewModel.isLoadingData.value,
+                        isEnd = viewModel.isEnd,
+                        itemCount = state.articleList.size
+                    )
                 }
             }
         }

@@ -3,14 +3,14 @@ package com.chuyou.mycomposetest.ui.mine
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import com.chuyou.base.bean.BaseResponse
 import com.chuyou.base.effect.CommonEffect
-import com.chuyou.base.http.LOGIN
-import com.chuyou.base.http.REGISTER
-import com.chuyou.base.http.postFlowRequest
 import com.chuyou.base.route.MyNavigator
 import com.chuyou.base.util.MMKVUtil
 import com.chuyou.base.viewmodel.BaseViewModel
+import com.chuyou.network.bean.BaseResponse
+import com.chuyou.network.http.LOGIN
+import com.chuyou.network.http.REGISTER
+import com.chuyou.network.http.postFlowRequest
 
 data class AuthUiState(
     val username: String = "",
@@ -104,4 +104,3 @@ class AuthViewModel : BaseViewModel<AuthUiState>() {
             )
     }
 }
-

@@ -42,6 +42,8 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     implementation(project(":base"))
+    implementation(project(":network"))
+    implementation(project(":logger"))
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.navigation3.ui)

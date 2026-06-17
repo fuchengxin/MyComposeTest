@@ -7,11 +7,6 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Email
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Person
-import androidx.compose.material.icons.outlined.QuestionAnswer
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -23,23 +18,21 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.chuyou.base.R
+import com.chuyou.mycomposetest.R as RC
 import com.chuyou.base.route.MyNavigator
 import com.chuyou.base.route.RoutePath
-import com.chuyou.base.route.bottomToTopAnimatedComposable
-import com.chuyou.base.route.rightToLeftAnimatedComposable
 import com.chuyou.base.util.resToSp
-import com.chuyou.mycomposetest.ui.mine.LoginScreen
-import com.chuyou.mycomposetest.ui.mine.RegisterScreen
-import com.chuyou.mycomposetest.ui.web.WebScreen
+import com.chuyou.mycomposetest.route.homeGraph
+import com.chuyou.mycomposetest.route.loginGraph
+import com.chuyou.mycomposetest.route.webGraph
 
 @Composable
 fun MainScreen() {
@@ -52,7 +45,6 @@ fun MainScreen() {
     }
     val items = listOf(RoutePath.Home.route, RoutePath.Search.route, RoutePath.Msg.route, RoutePath.Mine.route)
     val labels = listOf("首页", "问答", "消息", "我的")
-    val icons = listOf(Icons.Outlined.Home, Icons.Outlined.QuestionAnswer, Icons.Outlined.Email, Icons.Outlined.Person)
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
     val shouldShowBottomBar = currentRoute in items
@@ -70,7 +62,20 @@ fun MainScreen() {
                 NavigationBar {
                     items.forEachIndexed { index, route ->
                         NavigationBarItem(
-                            icon = { Icon(icons[index], contentDescription = labels[index]) },
+                            icon = {
+                                val isSelected = currentRoute == route
+                                val iconRes = when (index) {
+                                    0 -> if (isSelected) RC.drawable.mod_navigation_bg1_1 else RC.drawable.mod_navigation_bg1
+                                    1 -> if (isSelected) RC.drawable.mod_navigation_bg2_2 else RC.drawable.mod_navigation_bg2
+                                    2 -> if (isSelected) RC.drawable.mod_navigation_bg3_3 else RC.drawable.mod_navigation_bg3
+                                    3 -> if (isSelected) RC.drawable.mod_navigation_bg4_4 else RC.drawable.mod_navigation_bg4
+                                    else -> RC.drawable.mod_navigation_bg1
+                                }
+                                Icon(
+                                    painter = painterResource(id = iconRes),
+                                    contentDescription = labels[index]
+                                )
+                            },
                             label = {
                                 Text(
                                     labels[index],
@@ -123,27 +128,9 @@ fun MainScreen() {
             //首页,搜索，消息，我的
             homeGraph()
             // Web页面
-            rightToLeftAnimatedComposable(
-                route = RoutePath.Web.route,
-                arguments = listOf(
-                    navArgument("url") { type = NavType.StringType },
-                    navArgument("title") { type = NavType.StringType }
-                )
-            ) { backStackEntry ->
-                val url = backStackEntry.arguments?.getString("url") ?: ""
-                val title = backStackEntry.arguments?.getString("title") ?: "网页"
-                WebScreen(url, title)
-            }
-
-            // 登录页面
-            rightToLeftAnimatedComposable(
-                route = RoutePath.Login.route
-            ) { LoginScreen() }
-            
-            // 注册页面
-            rightToLeftAnimatedComposable(
-                route = RoutePath.Register.route
-            ) { RegisterScreen() }
+            webGraph()
+            //登录，注册
+            loginGraph()
         }
     }
 }

@@ -18,6 +18,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.chuyou.base.route.MyNavigator
 import com.chuyou.base.route.RoutePath
 import com.chuyou.base.util.MMKVUtil
@@ -26,7 +27,7 @@ import com.chuyou.base.util.MMKVUtil
 @Composable
 fun MineScreen() {
     var isLoggedIn by remember { mutableStateOf(false) }
-
+    val viewModel: AuthViewModel = viewModel()
     LaunchedEffect(Unit) {
         isLoggedIn = MMKVUtil.isLoggedIn()
     }

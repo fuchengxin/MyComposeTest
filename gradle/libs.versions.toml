@@ -28,14 +28,16 @@ nav3Lifecycle = "2.10.0"
 navigationCompose = "2.9.7"
 pagingCompose = "3.4.1"
 rxhttp = "3.5.1"
-okhttp = "4.12.0"
-coil = "2.5.0"
-browser = "1.9.0"
-mmkv = "2.3.0"
+okhttp = "5.4.0"
+coil = "2.7.0"
+browser = "1.10.0"
+mmkv = "2.4.0"
+xlog = "1.11.1"
 
 #----------------------- plugins ---------------------------
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
 android-library = { id = "com.android.library", version.ref = "agp" }
@@ -80,6 +82,8 @@ rxhttp = { group = "com.github.liujingxing.rxhttp", name = "rxhttp", version.ref
 rxhttp-compiler = { group = "com.github.liujingxing.rxhttp", name = "rxhttp-compiler", version.ref = "rxhttp" }
 coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 mmkv = { group = "com.tencent", name = "mmkv-static", version.ref = "mmkv" }
+#https://github.com/elvishew/xlog
+xlog = { group = "com.elvishew", name = "xlog", version.ref = "xlog" }
 
 [bundles]
 compose = [

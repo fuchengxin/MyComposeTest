@@ -2,13 +2,13 @@ package com.chuyou.mycomposetest.ui.search
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.chuyou.base.http.GET_QUESTION_ANSWER_LIST
-import com.chuyou.base.http.getFlowRequest
+import com.chuyou.network.http.GET_QUESTION_ANSWER_LIST
+import com.chuyou.network.http.getFlowRequest
 import com.chuyou.mycomposetest.bean.BasePageData
 import com.chuyou.mycomposetest.bean.QuestionAnswerItem
 import kotlinx.coroutines.flow.first
 
-class QuestionPagingSource() : PagingSource<Int, QuestionAnswerItem>() {
+class QuestionPagingSource : PagingSource<Int, QuestionAnswerItem>() {
 
     override fun getRefreshKey(state: PagingState<Int, QuestionAnswerItem>): Int? = null
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, QuestionAnswerItem> {

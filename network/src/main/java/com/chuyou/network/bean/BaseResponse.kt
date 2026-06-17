@@ -1,4 +1,4 @@
-package com.chuyou.base.bean
+package com.chuyou.network.bean
 
 import com.google.gson.annotations.SerializedName
 

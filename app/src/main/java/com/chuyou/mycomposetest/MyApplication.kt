@@ -2,10 +2,9 @@ package com.chuyou.mycomposetest
 
 import android.app.Application
 import android.content.Context
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
-import com.chuyou.base.http.NetworkConfig
+import com.chuyou.logger.LogUtils
+import com.chuyou.network.http.NetworkConfig
 import com.tencent.mmkv.MMKV
 
 class MyApplication : Application() {
@@ -20,19 +19,21 @@ class MyApplication : Application() {
         _instance = this
         if (isMainProcess()) {
             initSDKs()
+        }else{
+            //  其他子进程
         }
     }
 
     private fun initSDKs() {
-        // 网络配置初始化
+        LogUtils.init(enableLog = BuildConfig.DEBUG)
         NetworkConfig.init(this)
-        // MMKV 初始化
         val rootDir = MMKV.initialize(this)
         Log.i("MMKV", "MMKV initialized in: $rootDir")
+        LogUtils.i("MMKV initialized in: $rootDir")
     }
 
     /**
-     * 判断是否为主进程，避免多进程重复初始化带来的资源浪费
+     * 获取并判断当前是否为主进程
      */
     private fun isMainProcess(): Boolean {
         return packageName == getProcessName()

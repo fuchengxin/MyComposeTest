@@ -1,7 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.google.ksp)
 }
 
 android {
@@ -21,16 +20,15 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     sourceSets {
         getByName("main") {
-            // 设置 jniLibs 目录
             jniLibs.setSrcDirs(listOf("libs"))
-
-            // 设置资源目录
             res.setSrcDirs(
                 listOf(
                     "src/main/res",
@@ -38,9 +36,6 @@ android {
                 )
             )
         }
-    }
-    ksp {
-        arg("rxhttp_package", "rxhttp") // 这里的参数可以根据文档自定义
     }
 }
 
@@ -66,12 +61,5 @@ dependencies {
     api(libs.androidx.paging.compose)
     api(libs.androidx.paging.runtime)
     api(libs.paging.common)
-
-    api(libs.okhttp)
-    api(libs.rxhttp)
     api(libs.mmkv)
-
-    // 注意：ksp 依赖也使用 alias
-    ksp(libs.rxhttp.compiler)
-
 }
