@@ -33,7 +33,7 @@ fun MhHomeScreen() {
         "炼妖资质计算" to { MyNavigator.navigate(RoutePath.MhLianYao) },
         "宝宝修炼" to { MyNavigator.navigate(RoutePath.MhBb) },
         "体活计算" to { MyNavigator.navigate(RoutePath.MhTiHuo) },
-        "其它" to { MyNavigator.navigateToWeb("https://box.175dt.com/", "梦幻工具箱") }
+        "其它" to { MyNavigator.navigateToWeb("https://box.175dt.com/", "MH工具箱") }
     )
 
     BasePage(title = "MH工具箱", showBackButton = false, isStatusBarImmersive = true) {
