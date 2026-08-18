@@ -26,9 +26,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.chuyou.mycomposetest.ui.main.MainScreen
+import com.chuyou.mycomposetest.ui.mh.MhMainScreen
 import com.chuyou.mycomposetest.ui.theme.MyComposeTestTheme
 import kotlinx.coroutines.delay
+import kotlin.time.Duration.Companion.milliseconds
 
 class MainActivity : ComponentActivity() {
     private val splashViewModel: SplashViewModel by viewModels()
@@ -53,22 +54,24 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppRoot() {
     var remainingSeconds by remember { mutableIntStateOf(3) }
-    var showSplash by remember { mutableStateOf(true) }
+    var showSplash by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         for (i in 3 downTo 1) {
             remainingSeconds = i
-            delay(1000)
+            delay(1000.milliseconds)
         }
         showSplash = false
     }
 
     if (showSplash) {
-        SplashPage(remainingSeconds) {
-            showSplash = false
-        }
+        SplashPage(
+            remainingSeconds = remainingSeconds,
+            onSkip = { showSplash = false },
+        )
     } else {
-        MainScreen()
+        MhMainScreen()
+//        MainScreen()
     }
 }
 
@@ -88,8 +91,7 @@ fun SplashPage(remainingSeconds: Int, onSkip: () -> Unit) {
                 fontSize = 24.sp
             )
             Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
+                modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 Button(onClick = onSkip) {
                     Text(text = "${remainingSeconds}s 跳过")

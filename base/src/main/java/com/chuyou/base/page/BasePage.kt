@@ -31,7 +31,7 @@ fun BasePage(
     showBackButton: Boolean = true,
     onBackClick: (() -> Unit)? = null,
     onRetryClick: () -> Unit = {}, // 错误时的重试回调
-    isStatusBarImmersive: Boolean = false, //是否是保留状态栏高度
+    isStatusBarImmersive: Boolean = true, //是否是保留状态栏高度
     customTitle: @Composable (() -> Unit)? = null,
     content: @Composable () -> Unit
 ) {

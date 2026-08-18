@@ -8,6 +8,12 @@ import com.chuyou.base.route.RoutePath
 import com.chuyou.base.route.rightToLeftAnimatedComposable
 import com.chuyou.mycomposetest.ui.home.HomeScreen
 import com.chuyou.mycomposetest.ui.message.MessageScreen
+import com.chuyou.mycomposetest.ui.mh.BaoShiScreen
+import com.chuyou.mycomposetest.ui.mh.BbScreen
+import com.chuyou.mycomposetest.ui.mh.LianYaoScreen
+import com.chuyou.mycomposetest.ui.mh.SuiShiScreen
+import com.chuyou.mycomposetest.ui.mh.TiHuoScreen
+import com.chuyou.mycomposetest.ui.mh.XingHuiScreen
 import com.chuyou.mycomposetest.ui.mine.LoginScreen
 import com.chuyou.mycomposetest.ui.mine.MineScreen
 import com.chuyou.mycomposetest.ui.mine.RegisterScreen
@@ -21,6 +27,18 @@ fun NavGraphBuilder.homeGraph(
     composable(RoutePath.Search.route) { QuestionScreen() }
     composable(RoutePath.Msg.route) { MessageScreen() }
     composable(RoutePath.Mine.route) { MineScreen() }
+}
+
+/**
+ * MH 工具箱计算器子页面图（不含 MhHome，由 MhMainScreen 单独注册）
+ */
+fun NavGraphBuilder.mhGraph() {
+    rightToLeftAnimatedComposable(RoutePath.MhBaoShi.route) { BaoShiScreen() }
+    rightToLeftAnimatedComposable(RoutePath.MhXingHui.route) { XingHuiScreen() }
+    rightToLeftAnimatedComposable(RoutePath.MhSuiShi.route) { SuiShiScreen() }
+    rightToLeftAnimatedComposable(RoutePath.MhLianYao.route) { LianYaoScreen() }
+    rightToLeftAnimatedComposable(RoutePath.MhBb.route) { BbScreen() }
+    rightToLeftAnimatedComposable(RoutePath.MhTiHuo.route) { TiHuoScreen() }
 }
 
 fun NavGraphBuilder.loginGraph(){
